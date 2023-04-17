@@ -4,6 +4,9 @@ const { Router } = require('express');
 
 
 const router = Router();
+router.get("/dogs",(request,response)=>{
+    response.send("listenig port 3001")
+})
 
 // Configurar los routers
 // Ejemplo: router.use('/auth', authRouter);

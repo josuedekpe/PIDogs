@@ -3,10 +3,10 @@ const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
 const {
-  DB_USER, DB_PASSWORD, DB_HOST,
+  DB_USER, DB_PASSWORD, DB_HOST,DB_NAME,
 } = process.env;
 
-const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/dogs`, {
+const sequelize = new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:5432/${DB_NAME}`, {
   logging: false, // set to console.log to see the raw SQL queries
   native: false, // lets Sequelize know we can use pg-native for ~30% more speed
 });
@@ -29,10 +29,13 @@ let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].s
 sequelize.models = Object.fromEntries(capsEntries);
 
 // En sequelize.models están todos los modelos importados como propiedades
+
 // Para relacionarlos hacemos un destructuring
-const { Dog } = sequelize.models;
+const { Dog,Temperaments } = sequelize.models;
 
 // Aca vendrian las relaciones
+Dog.belongsToMany(Temperaments, { through: 'DogTemperaments' });
+Temperaments.belongsToMany(Dog, { through: 'DogTemperaments' });
 // Product.hasMany(Reviews);
 
 module.exports = {
